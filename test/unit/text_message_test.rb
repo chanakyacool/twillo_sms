@@ -14,7 +14,7 @@ class TextMessageTest < ActiveSupport::TestCase
     @two_valid = TextMessage.new({numbers: "1111111111, 3333333333", message: msg})
     @two_invalid = TextMessage.new({numbers: "23, 55invalid", message: msg})
     @message_too_long = TextMessage.new({numbers: "6509315895", message: msg_long})
-    @duplicate = TextMessage.new({numbers: "1111111111, 1111111111, 3333333333, 3333333333", message: msg})
+    @duplicate = TextMessage.new({numbers: "1111111111, 1111111111, 3333333333, (333) 333-3333", message: msg})
   end
 
   test "text_message attributes must not be empty" do
@@ -42,7 +42,7 @@ class TextMessageTest < ActiveSupport::TestCase
 
   test "text_message should remove duplicates" do
     assert @duplicate.valid?
-    assert_equal @duplicate.numbers_array.count, 2
+    assert_equal 2, @duplicate.numbers_array.count
   end
 
 end

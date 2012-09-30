@@ -28,7 +28,7 @@ class TextMessage
 
   # parses :numbers into an array of unique, 10 digit numbers (only for valid records)
   def numbers_array
-    get_items_from_csv(numbers).uniq.collect{|x| x.gsub(/\D/, "")}
+    get_items_from_csv(numbers).collect{|x| x.gsub(/\D/, "")}.uniq
   end
 
   # needed for form not to try to access db
