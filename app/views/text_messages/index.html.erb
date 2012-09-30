@@ -1,0 +1,25 @@
+<h1>Listing text_messages</h1>
+
+<table>
+  <tr>
+    <th>Numbers</th>
+    <th>Message</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @text_messages.each do |text_message| %>
+  <tr>
+    <td><%= text_message.numbers %></td>
+    <td><%= text_message.message %></td>
+    <td><%= link_to 'Show', text_message %></td>
+    <td><%= link_to 'Edit', edit_text_message_path(text_message) %></td>
+    <td><%= link_to 'Destroy', text_message, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Text message', new_text_message_path %>
