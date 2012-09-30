@@ -1,83 +1,51 @@
 class TextMessagesController < ApplicationController
-  # GET /text_messages
-  # GET /text_messages.json
-  def index
-    @text_messages = TextMessage.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @text_messages }
-    end
-  end
-
-  # GET /text_messages/1
-  # GET /text_messages/1.json
-  def show
-    @text_message = TextMessage.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @text_message }
-    end
-  end
+  # twilio account information
+  TWILIO_NUMBER = "+16504580016"
+  ACCOUNT_SID = 'ACa38f9dc5f795d5664682b91144f05f49'
+  AUTH_TOKEN = 'd46693f8612922904306c4ea9acf5629'
 
   # GET /text_messages/new
-  # GET /text_messages/new.json
   def new
     @text_message = TextMessage.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @text_message }
-    end
-  end
-
-  # GET /text_messages/1/edit
-  def edit
-    @text_message = TextMessage.find(params[:id])
+    render :new
   end
 
   # POST /text_messages
-  # POST /text_messages.json
   def create
     @text_message = TextMessage.new(params[:text_message])
 
-    respond_to do |format|
-      if @text_message.save
-        format.html { redirect_to @text_message, notice: 'Text message was successfully created.' }
-        format.json { render json: @text_message, status: :created, location: @text_message }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @text_message.errors, status: :unprocessable_entity }
+    if @text_message.valid?
+
+      successes = []
+      errors = []
+      numbers = @text_message.numbers_array
+      account = Twilio::REST::Client.new(ACCOUNT_SID, AUTH_TOKEN).account
+      numbers.each do |number|
+
+        begin
+          account.sms.messages.create(
+              :from => TWILIO_NUMBER,
+              :to => "+1#{number}",
+              :body => @text_message.message
+          )
+          successes << "#{number}"
+        rescue Exception => e
+          errors << e.to_s
+        end
       end
-    end
-  end
 
-  # PUT /text_messages/1
-  # PUT /text_messages/1.json
-  def update
-    @text_message = TextMessage.find(params[:id])
-
-    respond_to do |format|
-      if @text_message.update_attributes(params[:text_message])
-        format.html { redirect_to @text_message, notice: 'Text message was successfully updated.' }
-        format.json { head :no_content }
+      flash[:errors] = errors
+      flash[:successes] = successes
+      if (flash[:errors].any?)
+        render :action => :status, :status => :bad_request
       else
-        format.html { render action: "edit" }
-        format.json { render json: @text_message.errors, status: :unprocessable_entity }
+        render :action => :status
       end
+
+    else
+      render :action => :new, :status => :bad_request
     end
   end
 
-  # DELETE /text_messages/1
-  # DELETE /text_messages/1.json
-  def destroy
-    @text_message = TextMessage.find(params[:id])
-    @text_message.destroy
-
-    respond_to do |format|
-      format.html { redirect_to text_messages_url }
-      format.json { head :no_content }
-    end
-  end
 end
