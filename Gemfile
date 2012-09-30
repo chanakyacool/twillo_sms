@@ -1,5 +1,11 @@
 source 'https://rubygems.org'
 
+# these lines are for heroku
+ruby '1.9.3'
+gem 'heroku', '~> 2.32.6'
+gem 'thin'
+
+
 gem 'rails', '3.2.8'
 
 # Bundle edge Rails instead:
