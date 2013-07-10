@@ -1,9 +1,9 @@
 class TextMessagesController < ApplicationController
 
   # twilio account information
-  TWILIO_NUMBER = "+16504580016"
-  ACCOUNT_SID = 'ACa38f9dc5f795d5664682b91144f05f49'
-  AUTH_TOKEN = 'd46693f8612922904306c4ea9acf5629'
+  TWILIO_NUMBER = "+12675923385"
+  ACCOUNT_SID = 'AC47e4cc9d9bcb0f4d4272b6332192d327'
+  AUTH_TOKEN = 'c93d7406b5e04ae7ea65214a57e1edbe'
 
   # GET /text_messages/new
   def new
@@ -28,7 +28,7 @@ class TextMessagesController < ApplicationController
         begin
           account.sms.messages.create(
               :from => TWILIO_NUMBER,
-              :to => "+1#{number}",
+              :to => "+91#{number}",
               :body => @text_message.message
           )
           successes << "#{number}"
